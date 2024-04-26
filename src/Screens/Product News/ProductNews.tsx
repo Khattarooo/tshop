@@ -6,12 +6,18 @@ import {
   Text,
   RefreshControl,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, useDispatch} from 'react-redux';
 import axios from 'axios';
-import {selectAccessToken} from '../../Redux/slices/authSlice';
+import {
+  resetAuthState,
+  selectAccessToken,
+  selectRefreshToken,
+  setAccessToken,
+} from '../../Redux/slices/authSlice';
 import PostCard from '../../Components/Organisime/PostCard/PostCard';
 import {PostProps} from '../../utils/types';
 import styles from './ProductNewsStyles';
+import {useToast} from 'react-native-toast-notifications';
 
 const ProductNews = () => {
   const [loading, setLoading] = useState(true);
@@ -20,43 +26,68 @@ const ProductNews = () => {
   const [hasNextPage, setHasNextPage] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const accessToken = useSelector(selectAccessToken);
+  const refreshToken = useSelector(selectRefreshToken);
+  const [refreshAttempted, setRefreshAttempted] = useState(false);
+
+  const dispatch = useDispatch();
+  const toast = useToast();
+
+  const refreshAccessToken = async () => {
+    if (refreshAttempted) {
+      dispatch(resetAuthState());
+      toast.show('Session terminated, Please log in again', {
+        type: 'danger',
+        animationType: 'zoom-in',
+      });
+      return null;
+    }
+    console.log('Attempting to refresh access token with:', refreshToken);
+    try {
+      const response = await axios.post(
+        'https://backend-practice.euriskomobility.me/refresh-token',
+        {refreshToken, token_expires_in: '1m'},
+      );
+      const newAccessToken = response.data.accessToken;
+      console.log('New access token received:', newAccessToken);
+      dispatch(setAccessToken(newAccessToken));
+      setRefreshAttempted(true);
+      return newAccessToken;
+    } catch (error) {
+      console.error('Error refreshing access token:', error);
+      setRefreshAttempted(true);
+      return null;
+    }
+  };
+
+  const fetchPosts = async () => {
+    console.log('Using access token for fetching posts:', accessToken);
+    try {
+      const response = await axios.get(
+        'https://backend-practice.euriskomobility.me/posts',
+        {
+          params: {page, pageSize: 10},
+          headers: {Authorization: `Bearer ${accessToken}`},
+        },
+      );
+      const {pagination, results} = response.data;
+      setPosts(page === 1 ? results : [...posts, ...results]);
+      setHasNextPage(pagination.hasNextPage);
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        await refreshAccessToken();
+      }
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get(
-          'https://backend-practice.euriskomobility.me/posts',
-          {
-            params: {
-              page,
-              pageSize: 10,
-            },
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          },
-        );
-        console.log('Response from API:', response.data);
-        const {pagination, results} = response.data;
-        if (page === 1) {
-          setPosts(results);
-        } else {
-          setPosts(prevPosts => [...prevPosts, ...results]);
-        }
-        setHasNextPage(pagination.hasNextPage);
-        setRefreshing(false);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-        setRefreshing(false);
-        setLoading(false);
-      }
-    };
-
-    if (accessToken && hasNextPage) {
+    if (accessToken && hasNextPage && !refreshing) {
+      console.log('Token at useEffect:', accessToken);
       fetchPosts();
     }
-  }, [accessToken, page, hasNextPage]);
+  }, [accessToken, page, hasNextPage, refreshing]);
 
   const handleNextPage = () => {
     if (hasNextPage && !loading) {
