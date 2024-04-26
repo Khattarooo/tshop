@@ -17,7 +17,7 @@ import {LogoIcon} from '../../Components/Atoms/Icon';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {useToast} from 'react-native-toast-notifications';
-import {setAccessToken, setUserData} from '../../Redux/slices/authSlice';
+import {setAccessToken} from '../../Redux/slices/authSlice';
 
 const Registration = () => {
   const [firstName, setFirstName] = useState('');
@@ -45,14 +45,7 @@ const Registration = () => {
       console.log(result.data);
 
       if (result.data.accessToken) {
-        const userData = {
-          firstName,
-          lastName,
-          phoneNumber,
-          city,
-        };
         dispatch(setAccessToken(result.data.accessToken));
-        dispatch(setUserData(userData));
         toast.show('Registration Successful', {
           type: 'success',
           animationType: 'zoom-in',

@@ -15,12 +15,12 @@ const styles = StyleSheet.create({
   banner: {
     position: 'absolute',
     top: 0,
-    height: 30, // Set your preferred height
-    width: '100%', // Make sure the width is enough to fit the screen
-    backgroundColor: 'yellow', // Choose a noticeable color
+    height: 30,
+    width: '100%',
+    backgroundColor: 'yellow',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 1, // Make sure the banner is above other elements
+    zIndex: 1,
   },
   bannerText: {
     fontWeight: 'bold',

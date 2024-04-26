@@ -1,5 +1,3 @@
-// Login.tsx
-
 import React, {useState} from 'react';
 import {
   View,
@@ -17,7 +15,7 @@ import axios from 'axios';
 import styles from './LoginStyle';
 import {LogoIcon} from '../../Components/Atoms/Icon';
 import {useNavigation} from '@react-navigation/native';
-import {setAccessToken} from '../../Redux/slices/authSlice';
+import {setAccessToken, setRefreshToken} from '../../Redux/slices/authSlice';
 import CustomButton from '../../Components/Atoms/Button';
 
 const Login = () => {
@@ -36,7 +34,7 @@ const Login = () => {
         {
           email,
           password,
-          token_expires_in: '15m',
+          token_expires_in: '1m',
         },
       );
       handleLoginResponse(result.data);
@@ -52,10 +50,12 @@ const Login = () => {
 
   const handleLoginResponse = (data: any) => {
     dispatch(setAccessToken(data.accessToken));
+    dispatch(setRefreshToken(data.refreshToken));
     toast.show('Login Successful', {
       type: 'success',
       animationType: 'zoom-in',
     });
+    console.log(data.refreshToken);
   };
 
   const navigateToRegister = () => {

@@ -70,13 +70,15 @@ const ProductNews = () => {
   };
 
   const renderPost = ({item}: {item: PostProps}) => (
-    <PostCard
-      key={item._id}
-      image_url={item.image_url}
-      title={item.title}
-      description={item.description}
-      _id={item._id}
-    />
+    <View style={styles.postsContainer}>
+      <PostCard
+        key={item._id}
+        image_url={item.image_url}
+        title={item.title}
+        description={item.description}
+        _id={item._id}
+      />
+    </View>
   );
 
   const renderFooter = () => {
