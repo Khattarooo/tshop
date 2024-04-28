@@ -11,8 +11,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.9,
     shadowRadius: 3.8,
     elevation: 10,
-    flexDirection: 'row', // Update to display items horizontally
-    alignItems: 'center', // Align items vertically in the center
+    flexDirection: 'row',
+    alignItems: 'center',
     width: '100%',
   },
   postImage: {

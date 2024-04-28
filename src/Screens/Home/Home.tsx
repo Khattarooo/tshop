@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useCallback, useRef} from 'react';
-import {View, RefreshControl, FlatList, Animated} from 'react-native';
+import {View, RefreshControl, FlatList, Animated, Text} from 'react-native';
 import ProductCard from '../../Components/Organisime/ProductCard/ProductCard';
 import styles from './HomeStyles';
 import {ProductProps} from '../../utils/types';
@@ -8,6 +8,7 @@ const Home = () => {
   const [products, setProducts] = useState<Array<ProductProps>>([]);
   const [page, setPage] = useState(1);
   const [refreshing, setRefreshing] = useState(false);
+  const [hasMorePosts, setHasMorePosts] = useState(true);
   const limitPerPage = 4;
   const moveAnimation = useRef(new Animated.Value(0)).current;
 
@@ -27,6 +28,9 @@ const Home = () => {
         `https://6628b3a154afcabd07369c31.mockapi.io/Product?page=${page}&limit=${limitPerPage}`,
       );
       const data = await response.json();
+      if (data.length === 0) {
+        setHasMorePosts(false);
+      }
       if (page === 1) {
         setProducts(data);
       } else {
@@ -42,16 +46,20 @@ const Home = () => {
   }, [fetchProducts, page]);
 
   const loadMoreProduct = () => {
-    setPage(page + 1);
+    if (hasMorePosts) {
+      setPage(page + 1);
+    }
   };
 
   const onRefresh = () => {
     setRefreshing(true);
     setPage(1);
+    setHasMorePosts(true);
     fetchProducts().then(() => {
       setRefreshing(false);
     });
   };
+
   const translateX = moveAnimation.interpolate({
     inputRange: [0, 1],
     outputRange: [-310, 310],
@@ -78,6 +86,17 @@ const Home = () => {
     </View>
   );
 
+  const renderFooter = () => {
+    if (!hasMorePosts) {
+      return (
+        <View style={styles.centeredContainer}>
+          <Text style={styles.noPost}>No more product to load</Text>
+        </View>
+      );
+    }
+    return null;
+  };
+
   return (
     <View style={styles.background}>
       <View style={styles.banner}>
@@ -98,6 +117,7 @@ const Home = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        ListFooterComponent={renderFooter}
         onEndReached={loadMoreProduct}
         onEndReachedThreshold={0.5}
       />

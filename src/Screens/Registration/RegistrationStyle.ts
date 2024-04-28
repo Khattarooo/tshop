@@ -22,9 +22,12 @@ const styles = StyleSheet.create({
   nameInput2: {
     width: '48%',
   },
+  keyboardAvoiding: {
+    flex: 1,
+  },
   content: {
     width: '90%',
-    backgroundColor: '#72d87a',
+    backgroundColor: '#75d89a',
     borderRadius: 25,
     padding: 15,
     alignItems: 'center',
@@ -39,11 +42,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: 'black',
   },
-  scrollContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 20,
-  },
+
   input: {
     width: '90%',
     height: 40,

@@ -55,8 +55,8 @@ const Login = () => {
       type: 'success',
       animationType: 'zoom-in',
     });
-    console.log(data.refreshToken);
   };
+  const isSignUpDisabled = !email || !password || loading;
 
   const navigateToRegister = () => {
     navigation.navigate('Registration' as never);
@@ -67,7 +67,7 @@ const Login = () => {
       source={require('../../assets/w1.png')}
       style={styles.background}>
       <KeyboardAvoidingView
-        style={{flex: 1}}
+        style={styles.keyboardAvoiding}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <View style={styles.container}>
           <View style={styles.content}>
@@ -93,11 +93,15 @@ const Login = () => {
               <ActivityIndicator
                 animating={true}
                 size={'large'}
-                color={'#2EA838'}
+                color={'white'}
               />
             ) : (
               <>
-                <CustomButton title="Login" onPress={onLogin} />
+                <CustomButton
+                  title="Login"
+                  disabled={isSignUpDisabled}
+                  onPress={onLogin}
+                />
                 <TouchableOpacity onPress={navigateToRegister}>
                   <Text style={styles.signInText}>
                     Don't have an account? Register now

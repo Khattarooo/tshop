@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, Text, Image} from 'react-native';
-import styles from './PostCardStyles'; // Make sure to adjust the import path if needed
+import styles from './PostCardStyles';
 import {PostProps} from '../../../utils/types';
 
 const PostCard: React.FC<PostProps> = ({image_url, title, description}) => {

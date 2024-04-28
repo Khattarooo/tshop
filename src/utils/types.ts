@@ -13,19 +13,8 @@ export interface PostProps {
   title: string;
   description: string;
 }
-export interface UserData {
-  id: number | null;
-  firstName: string | null;
-  lastName: string | null;
-  phoneNumber: number | null;
-  city: string | null;
-  date: Date;
-}
-
-export interface AuthState {
-  isAuthenticated: boolean;
-}
 export interface CustomButtonProps {
   title: string;
+  disabled?: boolean;
   onPress: () => void;
 }

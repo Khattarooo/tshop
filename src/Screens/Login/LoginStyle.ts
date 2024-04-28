@@ -28,6 +28,9 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: 'black',
   },
+  keyboardAvoiding: {
+    flex: 1,
+  },
   input: {
     width: '90%',
     height: 40,

@@ -23,7 +23,7 @@ const ProductCard: React.FC<ProductProps> = ({
   const handleLongPress = () => {
     setModalVisible(true);
     if (currency === 'USD') {
-      const conversionRate = 90000; // Your fixed conversion rate
+      const conversionRate = 90000;
       const formattedPrice = (price * conversionRate)
         .toFixed(0)
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');

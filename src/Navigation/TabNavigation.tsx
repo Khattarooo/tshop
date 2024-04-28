@@ -1,23 +1,15 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {
-  Image,
-  ImageBackground,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Home from '../Screens/Home/Home';
 import {useNavigation} from '@react-navigation/native';
 import Search from '../Screens/SearchScreen/Search';
 import {
-  CameraIcon,
   HomeIcon,
   SearchIcon,
   LogoIconHeader,
   NewsIcon,
 } from '../Components/Atoms/Icon';
-import CameraScreen from '../Screens/CameraScreen/CameraScreen';
 import ProductNews from '../Screens/Product News/ProductNews';
 
 const Tab = createBottomTabNavigator();
@@ -38,6 +30,7 @@ export default function App() {
   return (
     <View style={styles.background}>
       <Tab.Navigator
+        initialRouteName=" "
         screenOptions={{
           headerTitleAlign: 'center',
           tabBarStyle: {
@@ -51,15 +44,6 @@ export default function App() {
           tabBarShowLabel: false,
           tabBarActiveBackgroundColor: '#2EA838',
         }}>
-        {/* <Tab.Screen
-          name="CameraScreen"
-          component={CameraScreen}
-          options={{
-            headerTitle: 'Create Post',
-            tabBarIcon: CameraIcon,
-            headerLeft: renderLeftButton,
-          }}
-        /> */}
         <Tab.Screen
           name="ProductNews"
           component={ProductNews}
@@ -69,7 +53,6 @@ export default function App() {
             headerLeft: renderLeftButton,
           }}
         />
-
         <Tab.Screen
           name=" "
           component={Home}

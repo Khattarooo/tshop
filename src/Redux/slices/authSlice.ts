@@ -34,7 +34,6 @@ export const authSlice = createSlice({
 
 export const {setAccessToken, setRefreshToken, resetAuthState} =
   authSlice.actions;
-
 export const selectAccessToken = (state: {auth: AuthState}) =>
   state.auth.accessToken;
 export const selectRefreshToken = (state: {auth: AuthState}) =>

@@ -41,26 +41,22 @@ const ProductNews = () => {
       });
       return null;
     }
-    console.log('Attempting to refresh access token with:', refreshToken);
     try {
       const response = await axios.post(
         'https://backend-practice.euriskomobility.me/refresh-token',
         {refreshToken, token_expires_in: '1m'},
       );
       const newAccessToken = response.data.accessToken;
-      console.log('New access token received:', newAccessToken);
       dispatch(setAccessToken(newAccessToken));
       setRefreshAttempted(true);
       return newAccessToken;
     } catch (error) {
-      console.error('Error refreshing access token:', error);
       setRefreshAttempted(true);
       return null;
     }
   };
 
   const fetchPosts = async () => {
-    console.log('Using access token for fetching posts:', accessToken);
     try {
       const response = await axios.get(
         'https://backend-practice.euriskomobility.me/posts',
@@ -72,7 +68,7 @@ const ProductNews = () => {
       const {pagination, results} = response.data;
       setPosts(page === 1 ? results : [...posts, ...results]);
       setHasNextPage(pagination.hasNextPage);
-    } catch (error) {
+    } catch (error: any) {
       if (error.response && error.response.status === 403) {
         await refreshAccessToken();
       }
@@ -84,7 +80,6 @@ const ProductNews = () => {
 
   useEffect(() => {
     if (accessToken && hasNextPage && !refreshing) {
-      console.log('Token at useEffect:', accessToken);
       fetchPosts();
     }
   }, [accessToken, page, hasNextPage, refreshing]);

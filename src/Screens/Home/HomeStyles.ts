@@ -11,7 +11,15 @@ const styles = StyleSheet.create({
   productContainer: {
     paddingHorizontal: 15,
   },
-
+  centeredContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'yellow',
+  },
+  noPost: {
+    color: 'gray',
+  },
   banner: {
     position: 'absolute',
     top: 0,
