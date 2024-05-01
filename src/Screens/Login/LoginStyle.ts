@@ -12,9 +12,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   content: {
-    width: '90%',
+    width: '80%',
     backgroundColor: '#72d87a',
-    borderRadius: 25,
+    borderRadius: 30,
     padding: 15,
     alignItems: 'center',
     elevation: 15,
