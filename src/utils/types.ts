@@ -18,3 +18,7 @@ export interface CustomButtonProps {
   disabled?: boolean;
   onPress: () => void;
 }
+
+export interface LogoutProps {
+  onCancel: () => void;
+}

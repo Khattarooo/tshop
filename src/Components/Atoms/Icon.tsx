@@ -1,16 +1,16 @@
 import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 import Logo from '../../assets/logo.svg';
-export const ProfileIcon = () => (
-  <Image
-    source={require('../../assets/profile.png')}
-    style={styles.drawerIcon}
-  />
-);
 
 export const AboutIcon = () => (
   <Image
     source={require('../../assets/aboutus.png')}
+    style={styles.drawerIcon}
+  />
+);
+export const LogoutIcon = () => (
+  <Image
+    source={require('../../assets/logout.png')}
     style={styles.drawerIcon}
   />
 );

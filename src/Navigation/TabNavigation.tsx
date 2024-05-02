@@ -2,7 +2,7 @@ import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Home from '../Screens/Home/Home';
-import {useNavigation} from '@react-navigation/native';
+import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Search from '../Screens/SearchScreen/Search';
 import {
   HomeIcon,
@@ -18,7 +18,7 @@ export default function App() {
   const navigation = useNavigation();
 
   const openDrawer = () => {
-    navigation.toggleDrawer();
+    navigation.dispatch(DrawerActions.openDrawer());
   };
 
   const renderLeftButton = () => (
