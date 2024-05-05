@@ -10,13 +10,13 @@ import {
   Platform,
 } from 'react-native';
 import CustomButton from '../../Components/Atoms/Button';
-import axios from 'axios';
 import styles from './RegistrationStyle';
 import {LogoIcon} from '../../Components/Atoms/Icon';
 import {useNavigation} from '@react-navigation/native';
 import {useDispatch} from 'react-redux';
 import {useToast} from 'react-native-toast-notifications';
 import {setAccessToken} from '../../Redux/slices/authSlice';
+import {api} from '../../utils/api';
 
 const Registration = () => {
   const [email, setEmail] = useState('');
@@ -29,14 +29,11 @@ const Registration = () => {
   const onSignup = async () => {
     try {
       setLoading(true);
-      const result = await axios.post(
-        'https://backend-practice.euriskomobility.me/signup',
-        {
-          email,
-          password,
-          token_expires_in: '1m',
-        },
-      );
+      const result = await api.post('signup', {
+        email,
+        password,
+        token_expires_in: '1m',
+      });
 
       if (result.data.accessToken) {
         dispatch(setAccessToken(result.data.accessToken));

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   FlatList,
   View,
@@ -7,7 +7,6 @@ import {
   RefreshControl,
 } from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import axios from 'axios';
 import {
   resetAuthState,
   selectAccessToken,
@@ -18,6 +17,7 @@ import PostCard from '../../Components/Organisime/PostCard/PostCard';
 import {PostProps} from '../../utils/types';
 import styles from './ProductNewsStyles';
 import {useToast} from 'react-native-toast-notifications';
+import {api} from '../../utils/api';
 
 const ProductNews = () => {
   const [loading, setLoading] = useState(true);
@@ -32,7 +32,7 @@ const ProductNews = () => {
   const dispatch = useDispatch();
   const toast = useToast();
 
-  const refreshAccessToken = async () => {
+  const refreshAccessToken = useCallback(async () => {
     if (refreshAttempted) {
       dispatch(resetAuthState());
       toast.show('Session terminated, Please log in again', {
@@ -42,10 +42,10 @@ const ProductNews = () => {
       return null;
     }
     try {
-      const response = await axios.post(
-        'https://backend-practice.euriskomobility.me/refresh-token',
-        {refreshToken, token_expires_in: '1m'},
-      );
+      const response = await api.post('refresh-token', {
+        refreshToken,
+        token_expires_in: '0.1m',
+      });
       const newAccessToken = response.data.accessToken;
       dispatch(setAccessToken(newAccessToken));
       setRefreshAttempted(true);
@@ -54,19 +54,18 @@ const ProductNews = () => {
       setRefreshAttempted(true);
       return null;
     }
-  };
+  }, [refreshAttempted, dispatch, toast, refreshToken]);
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     try {
-      const response = await axios.get(
-        'https://backend-practice.euriskomobility.me/posts',
-        {
-          params: {page, pageSize: 10},
-          headers: {Authorization: `Bearer ${accessToken}`},
-        },
-      );
+      const response = await api.get('posts', {
+        params: {page, pageSize: 10},
+        headers: {Authorization: `Bearer ${accessToken}`},
+      });
       const {pagination, results} = response.data;
-      setPosts(page === 1 ? results : [...posts, ...results]);
+      setPosts(prevPosts =>
+        page === 1 ? results : [...prevPosts, ...results],
+      );
       setHasNextPage(pagination.hasNextPage);
     } catch (error: any) {
       if (error.response && error.response.status === 403) {
@@ -76,17 +75,17 @@ const ProductNews = () => {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [accessToken, refreshAccessToken, page]);
 
   useEffect(() => {
     if (accessToken && hasNextPage && !refreshing) {
       fetchPosts();
     }
-  }, [accessToken, page, hasNextPage, refreshing]);
+  }, [accessToken, hasNextPage, refreshing, fetchPosts]);
 
   const handleNextPage = () => {
     if (hasNextPage && !loading) {
-      setPage(page + 1);
+      setPage(prevPage => prevPage + 1);
     }
   };
 
@@ -95,10 +94,10 @@ const ProductNews = () => {
     setPage(1);
   };
 
-  const renderPost = ({item}: {item: PostProps}) => (
+  const renderPost = ({item, index}: {item: PostProps; index: number}) => (
     <View style={styles.postsContainer}>
       <PostCard
-        key={item._id}
+        key={`${item._id}_${index}`}
         image_url={item.image_url}
         title={item.title}
         description={item.description}
@@ -133,9 +132,7 @@ const ProductNews = () => {
       <FlatList
         data={posts}
         renderItem={renderPost}
-        keyExtractor={(item, index) =>
-          item._id ? item._id.toString() : index.toString()
-        }
+        keyExtractor={(item, index) => `${item._id}_${index}`}
         ListFooterComponent={renderFooter}
         onEndReached={handleNextPage}
         onEndReachedThreshold={0.5}

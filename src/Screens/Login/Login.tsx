@@ -11,12 +11,12 @@ import {
 } from 'react-native';
 import {useDispatch} from 'react-redux';
 import {useToast} from 'react-native-toast-notifications';
-import axios from 'axios';
 import styles from './LoginStyle';
 import {LogoIcon} from '../../Components/Atoms/Icon';
 import {useNavigation} from '@react-navigation/native';
 import {setAccessToken, setRefreshToken} from '../../Redux/slices/authSlice';
 import CustomButton from '../../Components/Atoms/Button';
+import {api} from '../../utils/api';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -29,14 +29,11 @@ const Login = () => {
   const onLogin = async () => {
     try {
       setLoading(true);
-      const result = await axios.post(
-        'https://backend-practice.euriskomobility.me/login',
-        {
-          email,
-          password,
-          token_expires_in: '1m',
-        },
-      );
+      const result = await api.post('login', {
+        email,
+        password,
+        token_expires_in: '0.5m',
+      });
       handleLoginResponse(result.data);
     } catch (err) {
       toast.show('Invalid email or password', {

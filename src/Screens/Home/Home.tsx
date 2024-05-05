@@ -3,7 +3,7 @@ import {View, RefreshControl, FlatList, Animated, Text} from 'react-native';
 import ProductCard from '../../Components/Organisime/ProductCard/ProductCard';
 import styles from './HomeStyles';
 import {ProductProps} from '../../utils/types';
-
+import {mockApi} from '../../utils/api';
 const Home = () => {
   const [products, setProducts] = useState<Array<ProductProps>>([]);
   const [page, setPage] = useState(1);
@@ -24,10 +24,10 @@ const Home = () => {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const response = await fetch(
-        `https://6628b3a154afcabd07369c31.mockapi.io/Product?page=${page}&limit=${limitPerPage}`,
+      const response = await mockApi.get(
+        `Product?page=${page}&limit=${limitPerPage}`,
       );
-      const data = await response.json();
+      const data = response.data;
       if (data.length === 0) {
         setHasMorePosts(false);
       }
@@ -39,7 +39,7 @@ const Home = () => {
     } catch (error) {
       console.error('Error fetching posts:', error);
     }
-  }, [page]);
+  }, [page, limitPerPage]);
 
   useEffect(() => {
     fetchProducts();
