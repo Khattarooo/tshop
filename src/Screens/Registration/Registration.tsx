@@ -21,6 +21,7 @@ import {api} from '../../utils/api';
 const Registration = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -29,6 +30,13 @@ const Registration = () => {
   const onSignup = async () => {
     try {
       setLoading(true);
+      if (password !== confirmPassword) {
+        toast.show('Passwords do not match', {
+          type: 'danger',
+          animationType: 'zoom-in',
+        });
+        return;
+      }
       const result = await api.post('signup', {
         email,
         password,
@@ -61,7 +69,7 @@ const Registration = () => {
     navigation.navigate('Login' as never);
   };
 
-  const isSignUpDisabled = !email || !password || loading;
+  const isSignUpDisabled = !email || !password || !confirmPassword || loading;
 
   return (
     <ImageBackground
@@ -88,6 +96,13 @@ const Registration = () => {
               placeholder="Password"
               value={password}
               onChangeText={setPassword}
+              secureTextEntry
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
               secureTextEntry
             />
             {loading ? (

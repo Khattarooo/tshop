@@ -1,4 +1,3 @@
-// Logout.js
 import React from 'react';
 import {Text, TouchableOpacity, View, ImageBackground} from 'react-native';
 import {resetAuthState} from '../../Redux/slices/authSlice';

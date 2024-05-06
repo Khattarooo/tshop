@@ -44,7 +44,7 @@ const ProductNews = () => {
     try {
       const response = await api.post('refresh-token', {
         refreshToken,
-        token_expires_in: '0.1m',
+        token_expires_in: '0.5m',
       });
       const newAccessToken = response.data.accessToken;
       dispatch(setAccessToken(newAccessToken));
@@ -100,7 +100,7 @@ const ProductNews = () => {
         key={`${item._id}_${index}`}
         image_url={item.image_url}
         title={item.title}
-        description={item.description}
+        keywords={item.keywords}
         _id={item._id}
       />
     </View>
@@ -108,13 +108,7 @@ const ProductNews = () => {
 
   const renderFooter = () => {
     if (!loading) {
-      if (posts.length === 0) {
-        return (
-          <View style={styles.centeredContainer}>
-            <Text style={styles.noPost}>No more posts</Text>
-          </View>
-        );
-      } else if (!hasNextPage) {
+      if (!hasNextPage) {
         return (
           <View style={styles.centeredContainer}>
             <Text style={styles.noPost}>No more posts to load</Text>

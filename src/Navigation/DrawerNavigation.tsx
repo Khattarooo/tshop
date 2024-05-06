@@ -21,13 +21,13 @@ const DrawerNavigation = () => {
         component={TabNavigation}
         options={{
           headerShown: false,
+          title: 'T-Shop',
           drawerIcon: LogoIconDrawer,
           drawerItemStyle: {
             borderRadius: 15,
           },
         }}
       />
-
       <Drawer.Screen
         name="About Us"
         component={AboutUs}
@@ -39,7 +39,6 @@ const DrawerNavigation = () => {
           },
         }}
       />
-
       <Drawer.Screen
         name="Logout"
         component={LogoutPrompt}

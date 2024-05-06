@@ -1,6 +1,6 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import Home from '../Screens/Home/Home';
 import {DrawerActions, useNavigation} from '@react-navigation/native';
 import Search from '../Screens/SearchScreen/Search';
@@ -11,7 +11,7 @@ import {
   NewsIcon,
 } from '../Components/Atoms/Icon';
 import ProductNews from '../Screens/Product News/ProductNews';
-
+import {MenuIcon} from '../Components/Atoms/Icon';
 const Tab = createBottomTabNavigator();
 
 export default function App() {
@@ -23,14 +23,14 @@ export default function App() {
 
   const renderLeftButton = () => (
     <TouchableOpacity onPress={openDrawer} style={styles.touchable}>
-      <Image source={require('../assets/menu.png')} style={styles.leftButton} />
+      <MenuIcon />
     </TouchableOpacity>
   );
 
   return (
     <View style={styles.background}>
       <Tab.Navigator
-        initialRouteName=" "
+        initialRouteName="home"
         screenOptions={{
           headerTitleAlign: 'center',
           tabBarStyle: {
@@ -54,7 +54,7 @@ export default function App() {
           }}
         />
         <Tab.Screen
-          name=" "
+          name="home"
           component={Home}
           options={{
             headerTitle: LogoIconHeader,

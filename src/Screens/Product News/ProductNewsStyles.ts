@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'yellow',
   },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'White',
+  },
   noPost: {
     color: 'gray',
   },

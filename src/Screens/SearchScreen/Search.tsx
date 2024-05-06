@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   TextInput,
@@ -10,6 +10,7 @@ import {
 import ProductCard from '../../Components/Organisime/ProductCard/ProductCard';
 import styles from './SearchStyles';
 import {ProductProps} from '../../utils/types';
+import {mockApi} from '../../utils/api';
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -23,10 +24,8 @@ const Search = () => {
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const response = await fetch(
-        'https://6628b3a154afcabd07369c31.mockapi.io/Product',
-      );
-      const data = await response.json();
+      const response = await mockApi.get('Product');
+      const data = await response.data;
       setProducts(data);
       setFilteredProducts(data);
     } catch (error) {
@@ -39,19 +38,23 @@ const Search = () => {
     fetchProducts();
   }, []);
 
-  const filterProducts = (query: string) => {
-    if (query) {
-      const matchedProducts = products.filter(product =>
-        product.Name.toLowerCase().includes(query.toLowerCase()),
-      );
-      setFilteredProducts(matchedProducts);
-    } else {
-      setFilteredProducts(products);
-    }
-  };
+  const filterProducts = useCallback(
+    (query: string) => {
+      if (query) {
+        const matchedProducts = products.filter(product =>
+          product.Name.toLowerCase().includes(query.toLowerCase()),
+        );
+        setFilteredProducts(matchedProducts);
+      } else {
+        setFilteredProducts(products);
+      }
+    },
+    [products],
+  );
+
   useEffect(() => {
     filterProducts(searchQuery);
-  }, [searchQuery, products]);
+  }, [searchQuery, filterProducts]);
 
   const renderProductItem = ({
     item,

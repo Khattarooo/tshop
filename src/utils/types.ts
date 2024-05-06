@@ -11,7 +11,7 @@ export interface PostProps {
   _id?: string;
   image_url?: string | null;
   title: string;
-  description: string;
+  keywords: string;
 }
 export interface CustomButtonProps {
   title: string;
